@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pydantic
+pydantic-settings
+cryptography
+python-multipart
+reportlab
+qrcode
+lxml
+signxml
+requests
+httpx
+
+# pyusb  # Required for real USB dongle communication
+cryptography
