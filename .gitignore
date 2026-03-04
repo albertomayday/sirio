@@ -1,0 +1,17 @@
+# Binarios
+*.exe
+*.lic
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Build
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
