@@ -1,0 +1,13 @@
+from openclaw import Agent
+
+agent = Agent(name="OpenClaw_VERIFACTU_FINAL")
+
+agent.add_task("generar_registro", module="backend.generate_record")
+agent.add_task("encadenar_hash", module="backend.hash_chain")
+agent.add_task("firmar_registro", module="modules.factura_utils.firmar_digital")
+agent.add_task("generar_qr", module="modules.factura_utils.generar_qr")
+agent.add_task("guardar_bd", module="backend.store_immutable")
+agent.add_task("enviar_aeat", module="modules.aeat_client.enviar_registro")
+agent.add_task("validar_respuesta", module="modules.aeat_client.validar_respuesta")
+
+agent.save("workflow_verifactu_final.yaml")

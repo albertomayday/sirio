@@ -1,0 +1,8 @@
+agent: OpenClaw_VERIFACTU
+tasks:
+  - task: generar_registro
+    module: modules/aeat_client/verifactu_skill
+  - task: encadenar_hash
+    module: modules/aeat_client/verifactu_skill
+  - task: enviar_aeat
+    module: modules/aeat_client/verifactu_skill

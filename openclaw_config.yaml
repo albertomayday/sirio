@@ -1,0 +1,4 @@
+workflow_file: agents/workflow_verifactu.yaml
+log_directory: logs
+retry_on_failure: true
+max_retries: 3

@@ -1,0 +1,16 @@
+{
+  "name": "sirio",
+  "version": "1.0.0",
+  "description": "TPV VERIFACTU con agente OpenClaw local-first",
+  "main": "index.js",
+  "scripts": {
+    "start": "node agents/openclaw_agent.js",
+    "doctor": "node openclaw/src/doctor.js",
+    "test": "node agents/openclaw_agent.js --dry-run"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "qrcode": "^1.5.3",
+    "axios": "^1.6.0"
+  }
+}
