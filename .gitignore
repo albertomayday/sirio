@@ -1,5 +1,11 @@
-node_modules/
-.env
-logs/
 *.exe
 *.lic
+__pycache__/
+*.pyc
+venv/
+.env
+dist/
+build/
+.DS_Store
+Thumbs.db
+logs/
