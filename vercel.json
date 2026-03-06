@@ -1,6 +1,7 @@
 {
-  "buildCommand": "npx vite build --root .",
-  "outputDirectory": "dist",
-  "installCommand": "npm install",
-  "framework": null
+  "rootDirectory": "frontend",
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install"
 }
