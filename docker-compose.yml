@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: sirio_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-tpv}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tpv_secure_password}
+      POSTGRES_DB: ${DB_NAME:-tpv}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-tpv} -d ${DB_NAME:-tpv}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sirio_network
+
+  # Backend API (FastAPI)
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: sirio_backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-tpv}:${DB_PASSWORD:-tpv_secure_password}@db:5432/${DB_NAME:-tpv}
+      MASTER_KEY_REPO: ${MASTER_KEY_REPO:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      DONGLE_REQUIRED: ${DONGLE_REQUIRED:-false}
+      DEBUG: ${DEBUG:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      AEAT_TEST_MODE: ${AEAT_TEST_MODE:-true}
+    volumes:
+      - ./backend:/app/backend
+      - verifactu_records:/tmp/verifactu_records
+      - ./licenses:/app/backend/licenses
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - sirio_network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend (Nginx)
+  frontend:
+    image: nginx:alpine
+    container_name: sirio_frontend
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - sirio_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+  verifactu_records:
+    driver: local
+
+networks:
+  sirio_network:
+    driver: bridge
