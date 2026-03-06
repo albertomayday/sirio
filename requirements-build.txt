@@ -1,0 +1,12 @@
+# Dependencias para compilar ejecutable x64 de SIRIO TPV
+# Usa este archivo solo para el build, no para la aplicación
+
+# Build tools
+pyinstaller>=6.0.0
+build>=1.0.0
+
+# Empaques
+wheel>=0.41.0
+
+# Metadata
+setuptools>=68.0.0
