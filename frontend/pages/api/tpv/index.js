@@ -1,4 +1,6 @@
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL);
 
 export default async function handler(req, res) {
   // Configurar CORS
@@ -20,15 +22,15 @@ export default async function handler(req, res) {
       // Obtener todas las transacciones
       const { limit = 10, offset = 0 } = req.query;
       
-      const result = await sql`
+      const rows = await sql`
         SELECT * FROM transactions 
         ORDER BY created_at DESC 
         LIMIT ${limit} OFFSET ${offset}
       `;
       
       return res.status(200).json({
-        data: result.rows,
-        count: result.rows.length,
+        data: rows,
+        count: rows.length,
       });
     }
 
@@ -54,7 +56,7 @@ export default async function handler(req, res) {
       const calculated_tax = processedItems.reduce((sum, item) => sum + item.line_tax, 0);
       const calculated_total = calculated_subtotal + calculated_tax;
 
-      const result = await sql`
+      const rows = await sql`
         INSERT INTO transactions (
           items, 
           subtotal, 
@@ -77,7 +79,7 @@ export default async function handler(req, res) {
 
       return res.status(201).json({
         message: 'Transaction created successfully',
-        data: result.rows[0],
+        data: rows[0],
         calculation: {
           subtotal: calculated_subtotal,
           tax: calculated_tax,

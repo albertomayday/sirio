@@ -10,6 +10,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/',
+        destination: '/static/index.html',
+        permanent: false,
+      },
+      {
         source: '/docs',
         destination: '/api/docs',
         permanent: false,
