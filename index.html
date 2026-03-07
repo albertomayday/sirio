@@ -613,25 +613,23 @@ static async getProductos() {
   }
 
 static async saveVenta(items, mesa, total, metodo, hash) {
-  try {
-  const res = await fetch(`${API_URL}/tpv`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-  items: items.map(i => ({ id: i.id, name: i.name, quantity: i.qty, price: i.price })),
-  subtotal: total / 1.21,
-  tax: total - (total / 1.21),
-  total,
-  payment_method: metodo,
-  }),
-  });
-  return res.json();
-  } catch (err) {
-  console.error('Error guardando venta:', err);
-  return null;
-  }
-  }
-  }
+    try {
+      const res = await fetch(`${API_URL}/tpv`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map(i => ({ id: i.id, name: i.name, quantity: i.qty, price: i.price })),
+          subtotal: total / 1.21,
+          tax: total - (total / 1.21),
+          total,
+          payment_method: metodo,
+        }),
+      });
+      return res.json();
+    } catch (err) {
+      console.error('Error guardando venta:', err);
+      return null;
+    }
   }
 }
 
