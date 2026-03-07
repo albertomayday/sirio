@@ -1,4 +1,6 @@
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL);
 
 export default async function handler(req, res) {
   const { id } = req.query;
@@ -6,16 +8,16 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       // Obtener transacción específica
-      const result = await sql`
+      const rows = await sql`
         SELECT * FROM transactions WHERE id = ${id}
       `;
 
-      if (result.rows.length === 0) {
+      if (rows.length === 0) {
         return res.status(404).json({ error: 'Transaction not found' });
       }
 
       return res.status(200).json({
-        data: result.rows[0],
+        data: rows[0],
       });
     }
 
@@ -23,7 +25,7 @@ export default async function handler(req, res) {
       // Actualizar transacción
       const { status, payment_method } = req.body;
 
-      const result = await sql`
+      const rows = await sql`
         UPDATE transactions 
         SET status = ${status || 'updated'}, 
             payment_method = ${payment_method || 'card'},
@@ -32,24 +34,24 @@ export default async function handler(req, res) {
         RETURNING *
       `;
 
-      if (result.rows.length === 0) {
+      if (rows.length === 0) {
         return res.status(404).json({ error: 'Transaction not found' });
       }
 
       return res.status(200).json({
         message: 'Transaction updated',
-        data: result.rows[0],
+        data: rows[0],
       });
     }
 
     if (req.method === 'DELETE') {
       // Eliminar transacción
-      const result = await sql`
+      const rows = await sql`
         DELETE FROM transactions WHERE id = ${id}
         RETURNING id
       `;
 
-      if (result.rows.length === 0) {
+      if (rows.length === 0) {
         return res.status(404).json({ error: 'Transaction not found' });
       }
 
