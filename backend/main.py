@@ -13,7 +13,7 @@ from licensing.validator import validar_licencia
 from core.config import settings
 
 # Check for dongle and license on startup
-if settings.DONGLE_REQUIRED:
+if False: # DEMO MODE - dongle bypassed
     dongle_manager = DongleManager()
     if not dongle_manager.check_dongle():
         print("CRITICAL ERROR: Security Dongle not found. System cannot start.")
